@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AlarmActivity">
+
+    <TextView
+        android:id="@+id/upperLimitValueTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textSize="36sp"
+        app:layout_constraintEnd_toEndOf="@+id/upperLimitLabelTextView"
+        app:layout_constraintStart_toStartOf="@+id/upperLimitLabelTextView"
+        app:layout_constraintTop_toBottomOf="@+id/upperLimitLabelTextView"
+        tools:text="90" />
+
+    <TextView
+        android:id="@+id/upperLimitLabelTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Limite Superior"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/lowerLimitLabelTextView"
+        app:layout_constraintTop_toTopOf="@+id/lowerLimitLabelTextView" />
+
+    <ImageView
+        android:id="@+id/alarmITypeActivityImageView"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/sensorTypeActivityTextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed"
+        app:srcCompat="@drawable/error" />
+
+    <TextView
+        android:id="@+id/patientActivityTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toTopOf="@+id/measuredValueLabelTextView"
+        app:layout_constraintEnd_toStartOf="@+id/alarmDateActivityTextView"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sensorTypeActivityTextView"
+        tools:text="Paciente: test-1" />
+
+    <TextView
+        android:id="@+id/alarmDateActivityTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@+id/patientActivityTextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/patientActivityTextView"
+        app:layout_constraintTop_toTopOf="@+id/patientActivityTextView"
+        tools:text="Fecha: 17/11/20 - 18:33" />
+
+    <TextView
+        android:id="@+id/sensorTypeActivityTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="TextView"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/patientActivityTextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/alarmITypeActivityImageView"
+        tools:text=" Sensor:  Oxigeno en sangre" />
+
+    <TextView
+        android:id="@+id/lowerLimitLabelTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Limite Inferior"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/lowerLimitValueTextView"
+        app:layout_constraintEnd_toStartOf="@+id/upperLimitLabelTextView"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/measuredValueActivityTextView" />
+
+    <TextView
+        android:id="@+id/lowerLimitValueTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textSize="36sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/lowerLimitLabelTextView"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/lowerLimitLabelTextView"
+        app:layout_constraintTop_toBottomOf="@+id/lowerLimitLabelTextView"
+        tools:text="90" />
+
+    <TextView
+        android:id="@+id/measuredValueLabelTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="Valor Medido"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/measuredValueActivityTextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/patientActivityTextView" />
+
+    <TextView
+        android:id="@+id/measuredValueActivityTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textSize="64sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/lowerLimitLabelTextView"
+        app:layout_constraintEnd_toEndOf="@+id/measuredValueLabelTextView"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/measuredValueLabelTextView"
+        app:layout_constraintTop_toBottomOf="@+id/measuredValueLabelTextView"
+        tools:text="82" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

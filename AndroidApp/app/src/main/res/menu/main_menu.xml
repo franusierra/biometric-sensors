@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:ignore="AlwaysShowAction">
+    <item
+        android:id="@+id/settings_item"
+        android:icon="@drawable/settings"
+        android:title="@string/title_activity_settings"
+        app:showAsAction="always" />
+</menu>

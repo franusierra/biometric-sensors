@@ -1,0 +1,115 @@
+version: 1.0
+provider:
+  name: openfaas
+  gateway: testclinicedge:8080
+functions:
+  blood-oxygen:
+    lang: python3-flask
+    handler: ./functions/blood-oxygen
+    image: franusi/function-blood-oxygen:latest
+    namespace: tfg-edge
+    environment:
+      clinic_name: "edge-clinic"
+      mosquitto_broker: mosquitto
+      influx_host: "influxdb"
+      influx_port: "8086"
+      alarm_lower_limit: "90"
+    labels:
+      com.openfaas.scale.min: "10"
+      com.openfaas.scale.max: "10"
+    annotations: 
+      topic: clinic/sensors/oxymeter
+    secrets:
+      - influxdb-auth
+    limits:
+      memory: 100Mi
+      cpu: 50m
+    requests:
+      memory: 100Mi
+      cpu: 50m
+
+  heartbeat:
+    lang: python3-flask
+    handler: ./functions/heartbeat
+    image: franusi/function-heartbeat:latest
+    namespace: tfg-edge
+    environment:
+      clinic_name: "edge-clinic"
+      mosquitto_broker: mosquitto
+      influx_host: "influxdb"
+      influx_port: "8086"
+      alarm_lower_limit: "40"
+      alarm_upper_limit: "100"
+    labels:
+      com.openfaas.scale.min: "10"
+      com.openfaas.scale.max: "10"
+    annotations: 
+      topic: clinic/sensors/heartbeat
+    secrets:
+      - influxdb-auth
+  temperature:
+    lang: python3-flask
+    handler: ./functions/temperature
+    image: franusi/function-temperature:latest
+    namespace: tfg-edge
+    environment:
+      clinic_name: "edge-clinic"
+      mosquitto_broker: mosquitto
+      influx_host: "influxdb"
+      influx_port: "8086"
+      alarm_lower_limit: "35.5"
+      alarm_upper_limit: "38"
+    labels:
+      com.openfaas.scale.min: "10"
+      com.openfaas.scale.max: "10"
+    annotations: 
+      topic: clinic/sensors/temperature
+    secrets:
+      - influxdb-auth
+  alarms-upload:
+    lang: python3-flask
+    handler: ./functions/alarms-upload
+    image: franusi/alarms-upload:latest
+    namespace: tfg-edge
+    environment:
+      clinic_name: "edge-clinic"
+      influx_host_local: "influxdb"
+      influx_port_local: "8086"
+      influx_host_cloud: "cloudaggregation.ddns.net"
+      influx_port_cloud: "8086"
+    annotations: 
+      topic: cron-function
+      schedule: "*/30 * * * *"
+    secrets:
+      - influxdb-auth
+      - influxdb-cloud-auth
+    limits:
+      memory: 100Mi
+      cpu: 50m
+    requests:
+      memory: 100Mi
+      cpu: 50m
+
+  sensors-aggregation:
+    lang: python3-flask
+    handler: ./functions/sensors-aggregation
+    image: franusi/sensors-aggregation:latest
+    namespace: tfg-edge
+    environment:
+      clinic_name: "edge-clinic"
+      influx_host_local: "influxdb"
+      influx_port_local: "8086"
+      influx_host_cloud: "cloudaggregation.ddns.net"
+      influx_port_cloud: "8086"
+    annotations: 
+      topic: cron-function
+      schedule: "*/30 * * * *"
+    secrets:
+      - influxdb-auth
+      - influxdb-cloud-auth
+    limits:
+      memory: 100Mi
+      cpu: 50m
+    requests:
+      memory: 100Mi
+      cpu: 50m

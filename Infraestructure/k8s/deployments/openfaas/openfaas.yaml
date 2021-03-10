@@ -1,0 +1,45 @@
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: openfaas
+  namespace: kube-system
+spec:
+  chart: openfaas
+  targetNamespace: tfg-edge 
+  repo: https://openfaas.github.io/faas-netes/
+  set:
+    functionNamespace: "tfg-edge" 
+    serviceType: "LoadBalancer"
+    gateway.directFunctions: "false"
+    gateway.replicas: 1
+    queueWorker.replicas: 1
+---
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: mqtt-connector
+  namespace: kube-system
+spec:
+  chart: mqtt-connector
+  targetNamespace: tfg-edge 
+  version: 0.4.1
+  repo: https://openfaas.github.io/faas-netes/
+  set:
+    replicas: 1
+    asyncInvoke: "true"
+    topic: "clinic/sensors/+"
+    broker: "tcp://mosquitto:1883"
+    gateway_url: "http://gateway:8080"
+---
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: cron-connector
+  namespace: kube-system
+spec:
+  chart: cron-connector
+  targetNamespace: tfg-edge 
+  version: 0.3.2
+  repo: https://openfaas.github.io/faas-netes/
+  set:
+    gateway_url: "http://gateway:8080"

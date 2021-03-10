@@ -1,0 +1,117 @@
+
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: kube-prometheus-stack
+  namespace: kube-system
+spec:
+  chart: kube-prometheus-stack
+  targetNamespace: monitoring 
+  version: 14.0.1
+  repo: https://prometheus-community.github.io/helm-charts
+  valuesContent: |-
+          kubeEtcd:
+            enabled: false
+          kubeControllerManager:
+            enabled: false
+          kubeScheduler:
+            enabled: false
+          alertmanager:
+            alertmanagerSpec:
+              storage:
+                volumeClaimTemplate:
+                  spec:
+                    accessModes: ["ReadWriteOnce"]
+                    resources:
+                      requests:
+                        storage: 1Gi
+              resources:
+                limits:
+                  cpu: 50m
+                  memory: 64Mi
+                requests:
+                  cpu: 5m
+                  memory: 32Mi
+          prometheus:
+            prometheusSpec:
+              scrapeInterval: "30s"
+              evaluationInterval: "30s"
+              retention: 1d
+
+              storageSpec:
+                volumeClaimTemplate:
+                  spec:
+                    accessModes: ["ReadWriteOnce"]
+                    resources:
+                      requests:
+                        storage: 4Gi
+              resources:
+                limits:
+                  cpu: 250m
+                  memory: 660Mi
+                requests:
+                  cpu: 50m
+                  memory: 660Mi
+
+
+            service:
+              sessionAffinity: "ClientIP"
+          prometheusOperator:
+            admissionWebhooks:
+              enabled: false
+              patch:
+                enabled: false
+            tlsProxy:
+              enabled: false
+            tls:
+              enabled: false
+          grafana:
+            grafana.ini:
+              server:
+                root_url: /monitoring/
+                serve_from_sub_path: true
+            ingress:
+              path: /monitoring/
+            resources:
+              limits:
+                cpu: 100m
+                memory: 500Mi
+              requests:
+                cpu: 10m
+                memory: 65Mi
+            adminPassword: "politecnica"
+            
+
+          kube-state-metrics:
+            resources:
+              limits:
+                cpu: 100m
+                memory: 200Mi
+              requests:
+                cpu: 10m
+                memory: 50Mi
+
+          prometheus-node-exporter:
+            resources:
+              limits:
+                cpu: 100m
+                memory: 200Mi
+              requests:
+                cpu: 10m
+                memory: 20Mi
+---
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: monitoring-ingress
+  namespace: monitoring 
+  annotations:
+    kubernetes.io/ingress.class: "traefik"
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /monitoring
+        backend:
+          serviceName: kube-prometheus-stack-grafana
+          servicePort: 80

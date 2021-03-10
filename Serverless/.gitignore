@@ -1,0 +1,9 @@
+build
+.classpath
+.project
+.gradle
+.idea
+**/bin/**
+.settings
+/**/package-lock.json
+/**/node_modules

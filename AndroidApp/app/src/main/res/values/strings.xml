@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">Medical Notifications</string>
+    <string name="patient_alarm_message">Paciente: %1$s</string>
+    <string name="date_alarm_message">Fecha: %1$s</string>
+    <string name="sensor_type_message">Sensor: %1$s</string>
+    <string name="title_activity_settings">SettingsActivity</string>
+
+    <!-- Preference Titles -->
+    <string name="messages_header">MQTT Auth</string>
+    <string name="connection_header">Connection</string>
+
+    <!-- Messages Preferences -->
+    <string name="mqtt_auth_enabled">Activar identificacion mqtt</string>
+    <string name="mqtt_username">Your signature</string>
+    <string name="mqtt_password">Default reply action</string>
+
+    <!-- Sync Preferences -->
+    <string name="local_connection_title">Conectarse a traves de wifi local</string>
+    <string name="remote_connection_server_title">Url del servidor mqtt</string>
+
+</resources>

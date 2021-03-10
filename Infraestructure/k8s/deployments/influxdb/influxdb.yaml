@@ -1,0 +1,100 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  labels:
+    app: influxdb
+  name: influxdb
+  namespace: tfg-edge
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 8Gi
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: influx-init
+  namespace: tfg-edge
+data:
+  init-script.iql: >
+    CREATE DATABASE clinicdata;
+    CREATE RETENTION POLICY oneday ON clinicdata DURATION 1d REPLICATION 1 DEFAULT;
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: influxdb
+  name: influxdb
+  namespace: tfg-edge
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: influxdb
+  template:
+    metadata:
+      labels:
+        app: influxdb
+    spec:
+      
+      containers:
+      - image: docker.io/influxdb:1.8.4
+        imagePullPolicy: IfNotPresent
+        name: influxdb
+        volumeMounts:
+        - mountPath: /var/lib/influxdb
+          name: var-lib-influxdb
+        - mountPath: /docker-entrypoint-initdb.d
+          name: init-scripts  
+        env:
+        - name: INFLUXDB_HTTP_AUTH_ENABLED
+          value: "true"
+        - name: INFLUXDB_DB
+          valueFrom:
+            secretKeyRef:
+              name: influxdb-auth
+              key: influxdb-database
+        - name: INFLUXDB_ADMIN_USER
+          valueFrom:
+            secretKeyRef:
+              name: influxdb-auth
+              key: influxdb-username
+        - name: INFLUXDB_ADMIN_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: influxdb-auth
+              key: influxdb-password
+        resources:
+          requests:
+            memory: 256Mi
+            cpu: 100m
+          limits:
+            memory: 256Mi
+            cpu: 100m
+      volumes:
+      - name: var-lib-influxdb
+        persistentVolumeClaim:
+          claimName: influxdb
+      - name: init-scripts
+        configMap:
+          name: influx-init
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: influxdb
+  name: influxdb
+  namespace: tfg-edge
+spec:
+  selector:
+    app: influxdb
+  type: ClusterIP
+  ports:
+    - protocol: TCP
+      name: "8086"
+      port: 8086
+      targetPort: 8086

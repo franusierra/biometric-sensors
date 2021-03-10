@@ -1,0 +1,66 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: grafana-ingress
+  namespace: tfg-edge 
+  annotations:
+    kubernetes.io/ingress.class: "traefik"
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /
+        backend:
+          serviceName: grafana-sensors
+          servicePort: 80
+---
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: grafana-sensors
+  namespace: kube-system
+spec:
+  chart: grafana
+  version: 6.5.0
+  targetNamespace: tfg-edge 
+  repo: https://grafana.github.io/helm-charts
+  valuesContent: |-
+          grafana.ini:
+            dashboards:
+              default_home_dashboard_path: /var/lib/grafana/dashboards/sensors-dashboard.json
+          adminPassword: "politecnica"
+          persistence:
+            enabled: true
+            initChownData: true
+            # storageClassName: default
+            accessModes:
+              - ReadWriteOnce
+            size: 10Gi
+          ## Sidecars that collect the configmaps with specified label and stores the included files them into the respective folders
+          ## Requires at least Grafana 5 to work and can't be used together with parameters dashboardProviders, datasources and dashboards
+          sidecar:
+            resources:
+              limits:
+                cpu: 100m
+                memory: 100Mi
+              requests:
+                cpu: 50m
+                memory: 50Mi
+            dashboards:
+              enabled: true
+              # label that the configmaps with dashboards are marked with
+              label: grafana_dashboard
+              # folder in the pod that should hold the collected dashboards
+              folder: /var/lib/grafana/dashboards
+              # If specified, the sidecar will search for dashboard config-maps inside this namespace.
+              # Otherwise the namespace in which the sidecar is running will be used.
+              # It's also possible to specify ALL to search in all namespaces
+              searchNamespace: null
+            datasources:
+              enabled: true
+              # label that the configmaps with datasources are marked with
+              label: grafana_datasource
+              # If specified, the sidecar will search for datasource config-maps inside this namespace.
+              # Otherwise the namespace in which the sidecar is running will be used.
+              # It's also possible to specify ALL to search in all namespaces
+              searchNamespace: null
