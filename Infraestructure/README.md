@@ -1,7 +1,7 @@
 # Biometric Sensors Infraestructure
-Descargar el repositorio:
+Descargar el repositorio(instalar git si no está ya instalado):
 ```
-git clone 
+git clone https://github.com/franusierra/biometric-sensors.git
 ```
 ## Requisitos para desarrollo
 1. Docker: -> Instalar en [Windows](https://docs.docker.com/docker-for-windows/install/) o [Ubuntu](https://docs.docker.com/engine/install/ubuntu/)
@@ -73,3 +73,11 @@ Kube Prometheus Stack (Monitorización de recursos):
 ```
 kubectl apply -f k8s/deployments/kube-prometheus-stack
 ```
+# Acceso durante el desarrollo
+Una vez terminado el despliegue deberian de estar habilitadas las siguientes rutas. Todas las cuentas por defecto son de usuario `admin` y de contraseña `politecnica`
+| Servicio | Endpoint|
+| :------ | :----- |
+| Grafana Sensores | [localhost:80](localhost:80) |
+| Gateway Openfaas | [localhost:8080](localhost:8080) |
+| Grafana Monitorización | [localhost:80/monitoring](localhost:80/monitoring) |
+| Mqtt (Solo desde app o cliente mqtt) | localhost:1883 |
